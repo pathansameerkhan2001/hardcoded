@@ -3,35 +3,29 @@ version: 0.2
 phases:
   install:
     commands:
-      - echo "🔧 Starting INSTALL phase..."
-      - echo "➡️ Downloading Gitleaks tar.gz..."
-      - curl -sSL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks_Linux_x86_64.tar.gz -o gitleaks.tar.gz
-      - echo "📦 Extracting..."
-      - tar -xzf gitleaks.tar.gz
-      - chmod +x gitleaks
-      - echo "📂 Verifying file exists:"
-      - ls -lah gitleaks
-      - echo "🔍 Checking version..."
-      - ./gitleaks version
-      - echo "✅ INSTALL phase complete."
-
+      - echo Installing required tools...
+      - apt-get update -y
+      - apt-get install -y curl git gcc build-essential
+      - echo Installing Homebrew...
+      - /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      - echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> ~/.bashrc
+      - eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+      - brew install gitleaks
+      - gitleaks version
   build:
     commands:
-      - echo "🚀 Starting BUILD phase Running Gitleaks scan..."
-      - ./gitleaks detect --source . --report-format json --report-path gitleaks-report.json
-      - echo "📄 Gitleaks scan complete. Checking for secrets..."
+      - echo Running Gitleaks scan...
+      - gitleaks detect --source . --report-format json --report-path gitleaks-report.json
       - |
         if grep -q '"StartLine":' gitleaks-report.json; then
-          echo "❌ Secrets detected in the source code!"
-          echo "🛑 Failing the build due to secret leakage."
+          echo "Secrets detected! Failing the build."
           exit 1
         else
-          echo "✅ No secrets found in the code. Build can proceed."
+          echo "No secrets found."
         fi
-      - echo "🏁 BUILD phase complete."
-
 artifacts:
   files:
     - gitleaks-report.json
+
 
 
