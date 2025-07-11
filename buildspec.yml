@@ -6,7 +6,7 @@ phases:
       - echo "🔧 INSTALL phase started..."
       - echo "📦 Updating apt packages..."
       - apt-get update -y
-      - echo "📥 Installing required packages: curl, git, gcc, build-essential..."
+      - echo "📥 Installing required packages  curl, git, gcc, build-essential..."
       - apt-get install -y curl git gcc build-essential
       - echo "🍺 Installing Homebrew..."
       - /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
