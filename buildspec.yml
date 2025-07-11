@@ -4,19 +4,20 @@ phases:
   install:
     commands:
       - echo "🔧 Starting INSTALL phase..."
-      - echo "➡️ Downloading Gitleaks binary..."
-      - curl -sSL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks-linux-amd64 -o gitleaks
-      - echo "✅ Download complete. Applying execute permission..."
+      - echo "➡️ Downloading Gitleaks tar.gz..."
+      - curl -sSL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks_Linux_x86_64.tar.gz -o gitleaks.tar.gz
+      - echo "📦 Extracting..."
+      - tar -xzf gitleaks.tar.gz
       - chmod +x gitleaks
       - echo "📂 Verifying file exists:"
       - ls -lah gitleaks
       - echo "🔍 Checking version..."
-      - if ./gitleaks version; then echo "✅ Gitleaks works!"; else echo "❌ Failed to run gitleaks version"; exit 1; fi
+      - ./gitleaks version
       - echo "✅ INSTALL phase complete."
 
   build:
     commands:
-      - echo "🚀 Starting BUILD phase  Running Gitleaks scan..."
+      - echo "🚀 Starting BUILD phase Running Gitleaks scan..."
       - ./gitleaks detect --source . --report-format json --report-path gitleaks-report.json
       - echo "📄 Gitleaks scan complete. Checking for secrets..."
       - |
@@ -32,4 +33,5 @@ phases:
 artifacts:
   files:
     - gitleaks-report.json
+
 
