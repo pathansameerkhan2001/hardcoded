@@ -2,10 +2,14 @@ version: 0.2
 
 phases:
   install:
+    runtime-versions:
+      golang: latest
     commands:
       - echo Installing Gitleaks...
       - curl -sSL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks-linux-amd64 -o gitleaks
       - chmod +x gitleaks
+      - ls -l gitleaks  # Check file permissions
+      - ./gitleaks version  # Confirm it runs
   build:
     commands:
       - echo Running Gitleaks scan...
