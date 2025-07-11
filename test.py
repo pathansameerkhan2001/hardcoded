@@ -1,1 +1,2 @@
-password = "mySecret123"
+AWS_SECRET = "AKIAxxxxxxxxxxxxxxxxxx"
+PASSWORD = "MyDummyPassword123!"
