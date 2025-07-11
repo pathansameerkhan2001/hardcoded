@@ -26,7 +26,6 @@ phases:
 artifacts:
   files:
     - gitleaks-report.json
-frist verify this then will start the 
 
 
 
