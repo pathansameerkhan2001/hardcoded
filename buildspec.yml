@@ -6,6 +6,7 @@ phases:
       - echo Installing Gitleaks...
       - curl -sSL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks-linux-amd64 -o gitleaks
       - chmod +x gitleaks
+      - ls -l gitleaks
       - ./gitleaks version
   build:
     commands:
