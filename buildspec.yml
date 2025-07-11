@@ -11,12 +11,12 @@ phases:
       - echo "📂 Verifying file exists:"
       - ls -lah gitleaks
       - echo "🔍 Checking version..."
-      - ./gitleaks version || echo "❌ Failed to run gitleaks version" && exit 1
+      - if ./gitleaks version; then echo "✅ Gitleaks works!"; else echo "❌ Failed to run gitleaks version"; exit 1; fi
       - echo "✅ INSTALL phase complete."
 
   build:
     commands:
-      - echo "🚀 Starting BUILD phase Running Gitleaks scan..."
+      - echo "🚀 Starting BUILD phase: Running Gitleaks scan..."
       - ./gitleaks detect --source . --report-format json --report-path gitleaks-report.json
       - echo "📄 Gitleaks scan complete. Checking for secrets..."
       - |
@@ -32,7 +32,4 @@ phases:
 artifacts:
   files:
     - gitleaks-report.json
-
-
-
 
