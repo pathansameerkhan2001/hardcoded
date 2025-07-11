@@ -2,18 +2,16 @@ version: 0.2
 
 phases:
   install:
-    runtime-versions:
-      golang: 1.21
     commands:
-      - echo Installing Gitleaks via Go...
-      - export GO111MODULE=on
-      - go install github.com/gitleaks/gitleaks/v8@latest
-      - export PATH=$PATH:/root/go/bin
-      - gitleaks version
+      - echo "Downloading and setting up Gitleaks..."
+      - curl -sSL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks-linux-amd64 -o gitleaks
+      - chmod +x gitleaks
+      - ls -lh gitleaks
+      - ./gitleaks version
   build:
     commands:
-      - echo Running Gitleaks scan...
-      - gitleaks detect --source . --report-format json --report-path gitleaks-report.json
+      - echo "Running Gitleaks scan..."
+      - ./gitleaks detect --source . --report-format json --report-path gitleaks-report.json
       - |
         if grep -q '"StartLine":' gitleaks-report.json; then
           echo "Secrets detected! Failing the build."
@@ -24,3 +22,4 @@ phases:
 artifacts:
   files:
     - gitleaks-report.json
+
