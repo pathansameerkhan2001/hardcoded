@@ -3,15 +3,19 @@ version: 0.2
 phases:
   install:
     commands:
-      - echo Installing Gitleaks...
-      - curl -sSL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks-linux-amd64 -o gitleaks
-      - chmod +x gitleaks
-      - ls -l gitleaks
-      - ./gitleaks version
+      - echo Installing required tools...
+      - apt-get update -y
+      - apt-get install -y curl git gcc build-essential
+      - echo Installing Homebrew...
+      - /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      - echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> ~/.bashrc
+      - eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+      - brew install gitleaks
+      - gitleaks version
   build:
     commands:
       - echo Running Gitleaks scan...
-      - ./gitleaks detect --source . --report-format json --report-path gitleaks-report.json
+      - gitleaks detect --source . --report-format json --report-path gitleaks-report.json
       - |
         if grep -q '"StartLine":' gitleaks-report.json; then
           echo "Secrets detected! Failing the build."
@@ -22,4 +26,8 @@ phases:
 artifacts:
   files:
     - gitleaks-report.json
+frist verify this then will start the 
+
+
+
 
