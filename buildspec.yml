@@ -3,12 +3,13 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      golang: latest
+      golang: 1.21
     commands:
-      - echo Installing Gitleaks using Go...
+      - echo Installing Gitleaks via Go...
+      - export GO111MODULE=on
       - go install github.com/gitleaks/gitleaks/v8@latest
-      - export PATH=$PATH:$(go env GOPATH)/bin
-      - gitleaks version  # test run
+      - export PATH=$PATH:/root/go/bin
+      - gitleaks version
   build:
     commands:
       - echo Running Gitleaks scan...
@@ -23,5 +24,3 @@ phases:
 artifacts:
   files:
     - gitleaks-report.json
-
-
