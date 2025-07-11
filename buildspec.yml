@@ -3,26 +3,36 @@ version: 0.2
 phases:
   install:
     commands:
-      - echo Installing required tools...
+      - echo "🔧 INSTALL phase started..."
+      - echo "📦 Updating apt packages..."
       - apt-get update -y
+      - echo "📥 Installing required packages: curl, git, gcc, build-essential..."
       - apt-get install -y curl git gcc build-essential
-      - echo Installing Homebrew...
+      - echo "🍺 Installing Homebrew..."
       - /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      - echo "🔄 Setting up Homebrew environment..."
       - echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> ~/.bashrc
       - eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+      - echo "🍺 Installing Gitleaks using Homebrew..."
       - brew install gitleaks
+      - echo "🧪 Verifying Gitleaks installation..."
       - gitleaks version
+      - echo "✅ INSTALL phase complete."
+
   build:
     commands:
-      - echo Running Gitleaks scan...
+      - echo "🚀 BUILD phase started Running Gitleaks scan..."
       - gitleaks detect --source . --report-format json --report-path gitleaks-report.json
+      - echo "📄 Gitleaks scan complete. Analyzing report..."
       - |
         if grep -q '"StartLine":' gitleaks-report.json; then
-          echo "Secrets detected! Failing the build."
+          echo "❌ Secrets detected! Failing the build."
           exit 1
         else
-          echo "No secrets found."
+          echo "✅ No secrets found. Build is safe."
         fi
+      - echo "🏁 BUILD phase complete."
+
 artifacts:
   files:
     - gitleaks-report.json
